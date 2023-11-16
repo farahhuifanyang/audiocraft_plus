@@ -787,9 +787,9 @@ def calc_time(gen_type, s, duration, overlap, d0, d1, d2, d3, d4, d5, d6, d7, d8
     max_time = duration
     max_limit = 0
     if gen_type == "music":
-        max_limit = 30
+        max_limit = 300
     elif gen_type == "audio":
-        max_limit = 10
+        max_limit = 300
     track_add = max_limit - overlap
     tracks.append(max_limit + ((d_amount[0] - 1) * track_add))
     for i in range(1, 10):

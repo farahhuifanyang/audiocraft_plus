@@ -785,7 +785,7 @@ def calc_time(one_seg_duration, overlap, s):
             start = pre_s_e[1]
             end = start + one_seg_duration - overlap
             
-            if i == s:
+            if i == s - 1:
                 duration = end
             calc.append((start, end))
             calc_s2t.append(s2t(start, end))

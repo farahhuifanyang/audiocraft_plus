@@ -773,17 +773,24 @@ def s2t(seconds, seconds2):
         s = s + 1
     return ("%02d:%02d - %02d:%02d" % (m, s, m2, s2))
 
-def calc_time(one_seg_duration, overlap):
+def calc_time(one_seg_duration, overlap, s):
     calc = [(0, one_seg_duration)]
     calc_s2t = [s2t(0, one_seg_duration)]
-    for i in range(1, 10):
-        pre_s_e = calc[i-1]
-        start = pre_s_e[1]
-        end = start + one_seg_duration - overlap
-        calc.append((start, end))
-        calc_s2t.append(s2t(start, end))
+    duration = 0
+    if s == 1:
+        duration = one_seg_duration
+    else:
+        for i in range(1, 10):
+            pre_s_e = calc[i-1]
+            start = pre_s_e[1]
+            end = start + one_seg_duration - overlap
+            
+            if i == s:
+                duration = end
+            calc.append((start, end))
+            calc_s2t.append(s2t(start, end))
     
-    return calc_s2t
+    return calc_s2t[0], calc_s2t[1], calc_s2t[2], calc_s2t[3], calc_s2t[4], calc_s2t[5], calc_s2t[6], calc_s2t[7], calc_s2t[8], calc_s2t[9], duration
 
 def calc_time_ori(gen_type, s, duration, overlap, d0, d1, d2, d3, d4, d5, d6, d7, d8, d9):
     # calculate the time of generation
@@ -996,14 +1003,14 @@ def ui_full(launch_kwargs):
                             with gr.Row():
                                 text0 = gr.Text(label="Input Text", interactive=True, scale=4)
                                 prompts.append(text0)
-                                drag0 = gr.Number(label="Repeat", value=1, interactive=True, scale=1)
+                                drag0 = gr.Number(label="Repeat", value=1, interactive=False, scale=1)
                                 repeats.append(drag0)
                                 calc0 = gr.Text(interactive=False, value="00:00 - 00:00", scale=1, label="Time")
                                 calcs.append(calc0)
                             for i in range(max_textboxes):
                                 with gr.Row(visible=False) as t:
                                     text = gr.Text(label="Input Text", interactive=True, scale=3)
-                                    repeat = gr.Number(label="Repeat", minimum=1, value=1, interactive=True, scale=1)
+                                    repeat = gr.Number(label="Repeat", minimum=1, value=1, interactive=False, scale=1)
                                     calc = gr.Text(interactive=False, value="00:00 - 00:00", scale=1, label="Time")
                                 textboxes.append(t)
                                 prompts.append(text)
@@ -1011,7 +1018,7 @@ def ui_full(launch_kwargs):
                                 calcs.append(calc)
                             to_calc = gr.Button("Calculate Timings", variant="secondary")
                         with gr.Row():
-                            duration = gr.Slider(minimum=1, maximum=3000, value=300, step=1, label="Duration", interactive=True)
+                            duration = gr.Slider(minimum=1, maximum=3000, value=300, step=1, label="Duration", interactive=False)
                         with gr.Row():
                             one_seg_duration = gr.Slider(minimum=1, maximum=300, value=60, step=1, label="One Seg Duration", interactive=True)
                         with gr.Row():
@@ -1254,14 +1261,14 @@ def ui_full(launch_kwargs):
                             with gr.Row():
                                 text0_a = gr.Text(label="Input Text", interactive=True, scale=4)
                                 prompts_a.append(text0_a)
-                                drag0_a = gr.Number(label="Repeat", value=1, interactive=True, scale=1)
+                                drag0_a = gr.Number(label="Repeat", value=1, interactive=False, scale=1)
                                 repeats_a.append(drag0_a)
                                 calc0_a = gr.Text(interactive=False, value="00:00 - 00:00", scale=1, label="Time")
                                 calcs_a.append(calc0_a)
                             for i in range(max_textboxes):
                                 with gr.Row(visible=False) as t_a:
                                     text_a = gr.Text(label="Input Text", interactive=True, scale=3)
-                                    repeat_a = gr.Number(label="Repeat", minimum=1, value=1, interactive=True, scale=1)
+                                    repeat_a = gr.Number(label="Repeat", minimum=1, value=1, interactive=False, scale=1)
                                     calc_a = gr.Text(interactive=False, value="00:00 - 00:00", scale=1, label="Time")
                                 textboxes_a.append(t_a)
                                 prompts_a.append(text_a)
@@ -1269,7 +1276,7 @@ def ui_full(launch_kwargs):
                                 calcs_a.append(calc_a)
                             to_calc_a = gr.Button("Calculate Timings", variant="secondary")
                         with gr.Row():
-                            duration_a = gr.Slider(minimum=1, maximum=3000, value=300, step=1, label="Duration", interactive=True)
+                            duration_a = gr.Slider(minimum=1, maximum=3000, value=300, step=1, label="Duration", interactive=False)
                         with gr.Row():
                             one_seg_duration_a = gr.Slider(minimum=1, maximum=300, value=60, step=1, label="One Seg Duration", interactive=True)
                         with gr.Row():
@@ -1674,7 +1681,7 @@ def ui_full(launch_kwargs):
         submit.click(predict_full, inputs=[gen_type, model, decoder, dropdown, s, struc_prompts, bpm, key, scale, global_prompt, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, trim_start, trim_end, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, height, width, background, bar1, bar2, channel, sr_select], outputs=[output, audio_only, backup_only, download, seed_used])
         input_type.change(toggle_audio_src, input_type, [audio], queue=False, show_progress=False)
         # to_calc_ori.click(calc_time, inputs=[gen_type, s, duration, overlap, repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9]], outputs=[calcs[0], calcs[1], calcs[2], calcs[3], calcs[4], calcs[5], calcs[6], calcs[7], calcs[8], calcs[9]], queue=False)
-        to_calc.click(calc_time, inputs=[one_seg_duration, overlap], outputs=[calcs[0], calcs[1], calcs[2], calcs[3], calcs[4], calcs[5], calcs[6], calcs[7], calcs[8], calcs[9]], queue=False)
+        to_calc.click(calc_time, inputs=[one_seg_duration, overlap, s], outputs=[calcs[0], calcs[1], calcs[2], calcs[3], calcs[4], calcs[5], calcs[6], calcs[7], calcs[8], calcs[9], duration], queue=False)
 
         send_gen_a.click(info_to_params_a, inputs=[in_audio], outputs=[decoder_a, struc_prompts_a, global_prompt_a, s_a, prompts_a[0], prompts_a[1], prompts_a[2], prompts_a[3], prompts_a[4], prompts_a[5], prompts_a[6], prompts_a[7], prompts_a[8], prompts_a[9], repeats_a[0], repeats_a[1], repeats_a[2], repeats_a[3], repeats_a[4], repeats_a[5], repeats_a[6], repeats_a[7], repeats_a[8], repeats_a[9], duration_a, topk_a, topp_a, temperature_a, cfg_coef_a, seed_a, overlap_a, channel_a, sr_select_a], queue=False)
         reuse_seed_a.click(fn=lambda x: x, inputs=[seed_used_a], outputs=[seed_a], queue=False)
@@ -1682,7 +1689,7 @@ def ui_full(launch_kwargs):
         submit_a.click(predict_full, inputs=[gen_type_a, model_a, decoder_a, dropdown, s_a, struc_prompts_a, bpm, key, scale, global_prompt_a, prompts_a[0], prompts_a[1], prompts_a[2], prompts_a[3], prompts_a[4], prompts_a[5], prompts_a[6], prompts_a[7], prompts_a[8], prompts_a[9], repeats_a[0], repeats_a[1], repeats_a[2], repeats_a[3], repeats_a[4], repeats_a[5], repeats_a[6], repeats_a[7], repeats_a[8], repeats_a[9], audio_a, mode_a, trim_start_a, trim_end_a, duration_a, topk_a, topp_a, temperature_a, cfg_coef_a, seed_a, overlap_a, image_a, height_a, width_a, background_a, bar1_a, bar2_a, channel_a, sr_select_a], outputs=[output_a, audio_only_a, backup_only_a, download_a, seed_used_a])
         input_type_a.change(toggle_audio_src, input_type_a, [audio_a], queue=False, show_progress=False)
         # to_calc_ori_a.click(calc_time, inputs=[gen_type_a, s_a, duration_a, overlap_a, repeats_a[0], repeats_a[1], repeats_a[2], repeats_a[3], repeats_a[4], repeats_a[5], repeats_a[6], repeats_a[7], repeats_a[8], repeats_a[9]], outputs=[calcs_a[0], calcs_a[1], calcs_a[2], calcs_a[3], calcs_a[4], calcs_a[5], calcs_a[6], calcs_a[7], calcs_a[8], calcs_a[9]], queue=False)
-        to_calc_a.click(calc_time, inputs=[one_seg_duration_a, overlap_a], outputs=[calcs_a[0], calcs_a[1], calcs_a[2], calcs_a[3], calcs_a[4], calcs_a[5], calcs_a[6], calcs_a[7], calcs_a[8], calcs_a[9]], queue=False)
+        to_calc_a.click(calc_time, inputs=[one_seg_duration_a, overlap_a, s_a], outputs=[calcs_a[0], calcs_a[1], calcs_a[2], calcs_a[3], calcs_a[4], calcs_a[5], calcs_a[6], calcs_a[7], calcs_a[8], calcs_a[9], duration_a], queue=False)
 
         in_audio.change(get_audio_info, in_audio, outputs=[info])
 

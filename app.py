@@ -943,7 +943,7 @@ def predict_full(gen_type, model, decoder, custom_model, prompt_amount, struc_pr
     return mp4_target, wav_target, outs_backup[0], [mp4_target, wav_target, json_target], seed
 
 
-max_textboxes = 10
+max_textboxes = 20
 
 
 #def get_available_models():

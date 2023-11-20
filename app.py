@@ -253,7 +253,7 @@ def info_to_params(audio_path):
             if not audio_path.name.endswith(".json"):
                 with taglib.File(audio_path.name, save_on_exit=False) as song:
                     if 'COMMENT' not in song.tags:
-                        return "Default", False, "", 120, "C", "Major", "large", None, 1, "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, "sample", 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
+                        return "Default", False, "", 120, "C", "Major", "large", None, 1, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, "sample", 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
                     json_string = song.tags['COMMENT'][0]
                     data = json.loads(json_string)
                     struc_prompt = (False if data['bpm'] == "none" else True) if 'bpm' in data else False
@@ -266,8 +266,8 @@ def info_to_params(audio_path):
                     decoder = data['decoder'] if 'decoder' in data else "Default"
                     if 'texts' not in data:
                         unique_prompts = 1
-                        text = ["", "", "", "", "", "", "", "", "", ""]
-                        repeat = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                        text = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+                        repeat = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                     else:
                         s = data['texts']
                         s = re.findall(r"'(.*?)'", s)
@@ -282,8 +282,8 @@ def info_to_params(audio_path):
                                 else:
                                     repeat[-1] += 1
                             i += 1
-                        text.extend([""] * (10 - len(text)))
-                        repeat.extend([1] * (10 - len(repeat)))
+                        text.extend([""] * (max_textboxes - len(text)))
+                        repeat.extend([1] * (max_textboxes - len(repeat)))
                         unique_prompts = len([t for t in text if t])
                     audio_mode = ("sample" if data['audio_mode'] == "none" else data['audio_mode']) if 'audio_mode' in data else "sample"
                     duration = int(data['duration']) if 'duration' in data else 10
@@ -309,8 +309,8 @@ def info_to_params(audio_path):
                     decoder = data['decoder'] if 'decoder' in data else "Default"
                     if 'texts' not in data:
                         unique_prompts = 1
-                        text = ["", "", "", "", "", "", "", "", "", ""]
-                        repeat = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                        text = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+                        repeat = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                     else:
                         s = data['texts']
                         s = re.findall(r"'(.*?)'", s)
@@ -325,8 +325,8 @@ def info_to_params(audio_path):
                                 else:
                                     repeat[-1] += 1
                             i += 1
-                        text.extend([""] * (10 - len(text)))
-                        repeat.extend([1] * (10 - len(repeat)))
+                        text.extend([""] * (max_textboxes - len(text)))
+                        repeat.extend([1] * (max_textboxes - len(repeat)))
                         unique_prompts = len([t for t in text if t])
                     audio_mode = ("sample" if data['audio_mode'] == "none" else data['audio_mode']) if 'audio_mode' in data else "sample"
                     duration = int(data['duration']) if 'duration' in data else 10
@@ -340,9 +340,9 @@ def info_to_params(audio_path):
                     sr_select = data['sr_select'] if 'sr_select' in data else "48000"
                     return decoder, struc_prompt, global_prompt, bpm, key, scale, model, custom_model, unique_prompts, text[0], text[1], text[2], text[3], text[4], text[5], text[6], text[7], text[8], text[9], text[10], text[11], text[12], text[13], text[14], repeat[0], repeat[1], repeat[2], repeat[3], repeat[4], repeat[5], repeat[6], repeat[7], repeat[8], repeat[9], repeat[10], repeat[11], repeat[12], repeat[13], repeat[14], audio_mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, channel, sr_select
         else:
-            return "Default", False, "", 120, "C", "Major", "large", None, 1, "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, "sample", 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
+            return "Default", False, "", 120, "C", "Major", "large", None, 1, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, "sample", 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
     else:
-        return "Default", False, "", 120, "C", "Major", "large", None, 1, "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, "sample", 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
+        return "Default", False, "", 120, "C", "Major", "large", None, 1, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, "sample", 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
 
 
 def info_to_params_a(audio_path):
@@ -351,7 +351,7 @@ def info_to_params_a(audio_path):
             if not audio_path.name.endswith(".json"):
                 with taglib.File(audio_path.name, save_on_exit=False) as song:
                     if 'COMMENT' not in song.tags:
-                        return "Default", False, "", 1, "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
+                        return "Default", False, "", 1, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
                     json_string = song.tags['COMMENT'][0]
                     data = json.loads(json_string)
                     struc_prompt = (False if data['global_prompt'] == "" else True) if 'global_prompt' in data else False
@@ -359,8 +359,8 @@ def info_to_params_a(audio_path):
                     decoder = data['decoder'] if 'decoder' in data else "Default"
                     if 'texts' not in data:
                         unique_prompts = 1
-                        text = ["", "", "", "", "", "", "", "", "", ""]
-                        repeat = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                        text = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+                        repeat = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                     else:
                         s = data['texts']
                         s = re.findall(r"'(.*?)'", s)
@@ -375,8 +375,8 @@ def info_to_params_a(audio_path):
                                 else:
                                     repeat[-1] += 1
                             i += 1
-                        text.extend([""] * (10 - len(text)))
-                        repeat.extend([1] * (10 - len(repeat)))
+                        text.extend([""] * (max_textboxes - len(text)))
+                        repeat.extend([1] * (max_textboxes - len(repeat)))
                         unique_prompts = len([t for t in text if t])
                     duration = int(data['duration']) if 'duration' in data else 10
                     topk = float(data['topk']) if 'topk' in data else 250
@@ -396,8 +396,8 @@ def info_to_params_a(audio_path):
                     decoder = data['decoder'] if 'decoder' in data else "Default"
                     if 'texts' not in data:
                         unique_prompts = 1
-                        text = ["", "", "", "", "", "", "", "", "", ""]
-                        repeat = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                        text = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+                        repeat = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                     else:
                         s = data['texts']
                         s = re.findall(r"'(.*?)'", s)
@@ -412,8 +412,8 @@ def info_to_params_a(audio_path):
                                 else:
                                     repeat[-1] += 1
                             i += 1
-                        text.extend([""] * (10 - len(text)))
-                        repeat.extend([1] * (10 - len(repeat)))
+                        text.extend([""] * (max_textboxes - len(text)))
+                        repeat.extend([1] * (max_textboxes - len(repeat)))
                         unique_prompts = len([t for t in text if t])
                     duration = int(data['duration']) if 'duration' in data else 10
                     topk = float(data['topk']) if 'topk' in data else 250
@@ -427,9 +427,9 @@ def info_to_params_a(audio_path):
                     return decoder, struc_prompt, global_prompt, unique_prompts, text[0], text[1], text[2], text[3], text[4], text[5], text[6], text[7], text[8], text[9], text[10], text[11], text[12], text[13], text[14], repeat[0], repeat[1], repeat[2], repeat[3], repeat[4], repeat[5], repeat[6], repeat[7], repeat[8], repeat[9], repeat[10], repeat[11], repeat[12], repeat[13], repeat[14], duration, topk, topp, temperature, cfg_coef, seed, overlap, channel, sr_select
                     
         else:
-            return "Default", False, "", 1, "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
+            return "Default", False, "", 1, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
     else:
-        return "Default", False, "", 1, "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
+        return "Default", False, "", 1, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 250, 0, 1.0, 5.0, -1, 12, "stereo", "48000"
 
 
 def make_pseudo_stereo (filename, sr_select, pan, delay):
@@ -831,7 +831,7 @@ def calc_time_ori(gen_type, s, duration, overlap, d0, d1, d2, d3, d4, d5, d6, d7
     return calc[0], calc[1], calc[2], calc[3], calc[4], calc[5], calc[6], calc[7], calc[8], calc[9]
 
 
-def predict_full(gen_type, model, decoder, custom_model, prompt_amount, struc_prompt, bpm, key, scale, global_prompt, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, audio, mode, trim_start, trim_end, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, height, width, background, bar1, bar2, channel, sr_select, progress=gr.Progress()):
+def predict_full(gen_type, model, decoder, custom_model, prompt_amount, struc_prompt, bpm, key, scale, global_prompt, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, audio, mode, trim_start, trim_end, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, height, width, background, bar1, bar2, channel, sr_select, progress=gr.Progress()):
     global INTERRUPTING
     global USE_DIFFUSION
     INTERRUPTING = False
@@ -899,8 +899,8 @@ def predict_full(gen_type, model, decoder, custom_model, prompt_amount, struc_pr
 
     custom_model_shrt = "none" if model != "GrandaddyShmax/musicgen-custom" else custom_model_shrt
 
-    text_cat = [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9]
-    drag_cat = [d0, d1, d2, d3, d4, d5, d6, d7, d8, d9]
+    text_cat = [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14]
+    drag_cat = [d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14]
     texts = []
     raw_texts = []
     ind = 0

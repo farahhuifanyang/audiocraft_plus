@@ -780,7 +780,7 @@ def calc_time(one_seg_duration, overlap, s):
     if s == 1:
         duration = one_seg_duration
     else:
-        for i in range(1, 10):
+        for i in range(1, max_textboxes):
             pre_s_e = calc[i-1]
             start = pre_s_e[1]
             end = start + one_seg_duration - overlap
